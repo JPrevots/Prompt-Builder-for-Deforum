@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<!-- https://github.com/JPrevots?tab=repositories -->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Prompt tools for Deformer WebUI</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/bootstrap-unlit.css">
+    <link rel="stylesheet" href="./css/bootstrap-icons/bootstrap-icons.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"> -->
+    <style>
+        /* Fixes the page from shifting to the left when the scrollbar appears */
+        body {
+            overflow: scroll;
+        }
+
+        /* Remove the arrows in number input fields (Chromium based browsers) */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        /*         input[type=number] {
+            -moz-appearance: textfield;
+        } */
+    </style>
+</head>
+
+<body>
+    <!-- NavBar -->
+    <nav class="pt-3 container-fluid" style="max-width: 800px;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              <div class="navbar-brand">Prompt Tools for Deformer</div>
+              <div class="collapse navbar-collapse">
+                <ul id="my-ul" class="ms-auto navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link btn-lg bi-github" href="https://github.com/JPrevots?tab=repositories" target="_blank"></a>
+                  </li>          
+                </ul>
+              </div> 
+            </div>
+          </nav>
+    </nav>
+
+    <!-- Prompt View -->
+    <div class="view container-fluid" id="promptView" style="max-width: 800px;">
+        <!-- Static Global Positive Prompt Row -->
+        <div class="pt-3 row">
+            <div class="col">
+                <div class="form-floating">
+                    <textarea class="form-control" id="promptName" placeholder="" style="min-height: 58px;"></textarea>
+                    <label for="globalPositivePrompt">File Name</label>
+                </div>
+            </div>
+        </div>
+        <!-- Static buttons row -->
+        <div class="pt-3 row">
+            <!-- Add blank keyframe -->
+            <div class="col d-grid">
+                <button class="btn btn-success btn bi-plus-circle" id="addBlankKeyframe" onclick="addKeyframeEnd()"> Add new keyframe</button>
+            </div>
+            <!-- Copy prompt to clipboard -->
+            <div class="col d-grid">
+                <button class="btn btn-primary btn" id="copyPrompt" onclick="copyPromptToClipboard()">Copy prompt to clipboard</button>
+            </div>
+            <!-- Save prompt to file-->
+            <div class="col d-grid">
+                <button class="btn btn-primary btn bi-download" id="saveFile" onclick="savePromptToFile()"></button>
+            </div>
+        </div>
+
+        <!-- Static Global Positive Prompt Row -->
+        <div class="pt-3 row">
+            <div class="col">
+                <div class="form-floating">
+                    <textarea class="form-control" id="globalPositivePrompt" placeholder="" style="min-height: 58px;"></textarea>
+                    <label for="globalPositivePrompt">Global Positive Prompt</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Static Global Negative Prompt Row -->
+        <div class="pt-3 row">
+            <div class="col">
+                <div class="form-floating">
+                    <textarea class="form-control" id="globalNegativePrompt" placeholder="" style="min-height: 58px;"></textarea>
+                    <label for="globalNegativePrompt">Global Negative Prompt</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Where all the keyframe are -->
+        <div id="promptKeyframes"></div>
+    </div>
+
+    <!-- Keyframe Template -->
+    <div class="my-3 d-none" id="keyframeTemplate" style="background-color:#3b3b3b;">
+        <!-- First Row -->
+        <div class="row pt-2 px-2">
+            <!-- Frame Number -->
+            <div class="col-2">
+                <!-- <div class="input-group-text eventNumber"> </div> -->
+            </div>
+            <div class="col">
+                <div class="btn-group">
+                    <!-- Add New -->
+                    <div class="input-group-text">New</div>
+                    <!-- Start -->
+                    <button class="btn btn-success btn-sm bi-arrow-bar-up" onclick="addKeyframeStart()"></button>
+                    <!-- Before -->
+                    <button class="btn btn-success btn-sm bi-arrow-up" onclick="addKeyframeBefore(event)"></button>
+                    <!-- After -->
+                    <button class="btn btn-success btn-sm bi-arrow-down" onclick="addKeyframeAfter(event)"></button>
+                    <!-- End -->
+                    <button class="btn btn-success btn-sm bi-arrow-bar-down" onclick="addKeyframeEnd()"></button>
+
+                    <!-- Duplicate -->
+                    <div class="input-group-text">Copy</div>
+                    <!-- Duplicate Keyframe to Start -->
+                    <button class="btn btn-success btn-sm bi-arrow-bar-up" onclick="duplicateKeyframe(event, 0)"></button>
+                    <!-- Duplicate Keyframe before -->
+                    <button class="btn btn-success btn-sm bi-arrow-up" onclick="duplicateKeyframe(event, 1)"></button>
+                    <!-- Duplicate Keyframe to End -->
+                    <button class="btn btn-success btn-sm bi-arrow-bar-down" onclick="duplicateKeyframe(event, 2)"></button>
+
+                    <!-- Move -->
+                    <div class="input-group-text">Move</div>
+                    <!-- Move Start -->
+                    <button class="btn btn-success btn-sm bi-arrow-bar-up" onclick="moveStart(event)"></button>
+                    <!-- Move Up -->
+                    <button class="btn btn-success btn-sm bi-arrow-up" onclick="moveBefore(event)"></button>
+                    <!-- Move Down -->
+                    <button class="btn btn-success btn-sm bi-arrow-down" onclick="moveAfter(event)"></button>
+                    <!-- Move End -->
+                    <button class="btn btn-success btn-sm bi-arrow-bar-down" onclick="moveEnd(event)"></button>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="btn-group">
+                    <!-- Clear Frame Inputs -->
+                    <button class="btn btn-danger bi-arrow-counterclockwise" onclick="resetFrame(event)"></button>
+                    <!-- Delete Keyframe -->
+                    <button class="btn btn-danger btn-sm bi-x-circle" onclick="deleteKeyframe(event)"></button>
+                </div>
+            </div>
+        </div>
+        <!-- Second Row -->
+        <div class="my-2 row px-2">
+            <!-- frameNumber -->
+            <div class="col-2">
+                <div class="form-floating">
+                    <input type="number" class="form-control frameNumber" min="0" value="0" placeholder="">
+                    <label>frameNumber</label>
+                </div>
+            </div>
+            <!-- Negative Prompt -->
+            <div class="col">
+                <div class="form-floating">
+                    <textarea class="form-control negativePrompt" placeholder="" style="min-height: 58px;"></textarea>
+                    <label>Negative Prompt</label>
+                </div>
+            </div>
+        </div>
+        <!-- Third Row -->
+        <div class="my-2 row px-2 pb-2">
+            <!-- Prompt -->
+            <div class="col form">
+                <div class="form-floating">
+                    <textarea class="form-control prompt" placeholder="" style="min-height: 58px;"></textarea>
+                    <label class="form-label">Positive Prompt</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motion View -->
+    <div class="view pt-3 container-fluid d-none" id="motionView" style="max-width: 800px;">
+        <!-- Motion Keyframe Template -->
+        <div class="motionKeyFrame">
+            <!-- First Row -->
+            <div class="row">
+                <div class="col">
+                    <div class="btn-group">
+                        <!-- Translation -->
+                        <input type="radio" class="btn-check motionType" name="motionType" id="translation" autocomplete="off" checked />
+                        <label class="btn btn-outline-secondary" for="translation">Translation</label>
+                        <!-- Rotation -->
+                        <input type="radio" class="btn-check motionType" name="motionType" id="rotation" autocomplete="off" />
+                        <label class="btn btn-outline-secondary" for="rotation">Rotation</label>
+                        <!-- X Axis Button -->
+                        <input type="radio" class="btn-check axis" name="axis" id="x" autocomplete="off" checked />
+                        <label class="btn btn-outline-danger" for="x">X</label>
+                        <!-- Y Axis Button -->
+                        <input type="radio" class="btn-check axis" name="axis" id="y" autocomplete="off" />
+                        <label class="btn btn-outline-info" for="y">Y</label>
+                        <!-- Z Axis Button -->
+                        <input type="radio" class="btn-check axis" name="axis" id="z" autocomplete="off" />
+                        <label class="btn btn-outline-success" for="z">Z</label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="btn-group">
+                        <!-- Zoom -->
+                        <input type="radio" class="btn-check motionType" name="motionType" id="zoom" autocomplete="off" />
+                        <label class="btn btn-outline-secondary" for="zoom">Zoom</label>
+                        <!-- Angle -->
+                        <input type="radio" class="btn-check motionType" name="motionType" id="angle" autocomplete="off" />
+                        <label class="btn btn-outline-secondary" for="angle">Angle</label>
+                    </div>
+                </div>
+
+                <!-- To frame -->
+                <div class="col">
+                    <div class="btn-group">
+                        <!-- To next keyframe -->
+                        <input type="radio" class="btn-check axis" name="toFrame" id="next" autocomplete="off" checked />
+                        <label class="btn btn-outline-success" for="next">Next</label>
+                        <!-- To specific keyframe -->
+                        <input type="radio" class="btn-check axis" name="toFrame" id="specific" autocomplete="off" />
+                        <label class="btn btn-outline-danger" for="specific">Specific</label>
+                        <!-- Span -->
+                        <input type="radio" class="btn-check axis" name="toFrame" id="span" autocomplete="off" />
+                        <label class="btn btn-outline-primary" for="span">Span</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="py-2 row">
+                <!-- Start Frame Number -->
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="number" class="form-control frameNumber" min="0" value="0" placeholder="">
+                        <label>Start</label>
+                    </div>
+                </div>
+                <!-- Specific Frame Input -->
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="number" class="form-control span" min="0" value="1" placeholder="">
+                        <label>End</label>
+                    </div>
+                </div>
+                <!-- Span Input -->
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="number" class="form-control span" min="0" value="1" placeholder="">
+                        <label>Span</label>
+                    </div>
+                </div>
+                <!-- Value -->
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control span" placeholder="">
+                        <label>Value</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="view" id="aboutView"></div>
+
+    <script type="module" src="./js/main.js" async defer></script>
+</body>
+
+</html>
