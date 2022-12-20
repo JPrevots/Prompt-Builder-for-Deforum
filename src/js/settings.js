@@ -1,5 +1,5 @@
 export let settings = {
-    W: 768,
+    W: 512,
     H: 512,
     restore_faces: true,
     tiling: false,

@@ -19,3 +19,8 @@ function moveCommand(startFrame, amount, span = 0, type) {
     }
     //return `(${frameNumber}): (${value})`
 }
+
+let motionTypes = {
+    zoom: "",
+    
+}

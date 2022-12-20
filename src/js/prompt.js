@@ -3,25 +3,37 @@
 export function promptBuilder() {
     let globalPositivePrompt = (document.getElementById('globalPositivePrompt').value).trim();
     let globalNegativePrompt = (document.getElementById('globalNegativePrompt').value).trim();
-    let keyframes = document.getElementsByClassName('keyframe');
-    let promptCache = document.getElementsByClassName('prompt');
+    //let keyframes = document.getElementsByClassName('promptKeyframe');
     let frameNumberCache = document.getElementsByClassName('frameNumber');
+    let positivePromptCache = document.getElementsByClassName('positivePrompt');
     let negativePromptCache = document.getElementsByClassName('negativePrompt');
     let settingsprompt = [];
+    let globalNegativeFirst = document.getElementById("globalNegativeFirstButton");
+    let globalPositiveFirst = document.getElementById("globalPositiveFirstButton");
 
-    if (keyframes.length != 0) {
-        for (let i = 0; i < keyframes.length; i++) {
+    if (positivePromptCache.length != 0) {
+        for (let i = 0; i < positivePromptCache.length; i++) {
             let frameNumber = frameNumberCache[i].value;
-            let specificPositivePrompt = (promptCache[i].value).trim();
+            let specificPositivePrompt = (positivePromptCache[i].value).trim();
             let specificNegativePrompt = (negativePromptCache[i].value).trim();
 
             let negativePrompt = "";
+            let positivePrompt = "";
+            
             // Prevents inserting "--neg" if there is no negative prompt
             if (globalNegativePrompt || specificNegativePrompt) {
-                negativePrompt = `--neg ${globalNegativePrompt} ${specificNegativePrompt}`;
+                if (globalNegativeFirst.checked == true) {
+                    negativePrompt = `--neg ${globalNegativePrompt} ${specificNegativePrompt}`;
+                } else {
+                    negativePrompt = `--neg ${specificNegativePrompt} ${globalNegativePrompt}`;
+                }
             }
 
-            let positivePrompt = `${globalPositivePrompt} ${specificPositivePrompt}`;
+            if (globalPositiveFirst.checked == true) {
+                positivePrompt = `${globalPositivePrompt} ${specificPositivePrompt}`;
+            } else {
+                positivePrompt = `${specificPositivePrompt} ${globalPositivePrompt}`;
+            }
 
             let promptEntry = (`${positivePrompt} ${negativePrompt}`).trim();
             promptEntry = promptEntry.replace(/  +/g, ' '); // Replaces two spaces with only one
@@ -45,6 +57,9 @@ export function promptBuilder() {
             }
         }
         prompt += "}";
+
+
+        //JSON.stringify(fullPromptJson);
 
         console.log(prompt);
         return prompt

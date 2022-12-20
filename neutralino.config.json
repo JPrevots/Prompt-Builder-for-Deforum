@@ -1,6 +1,6 @@
 {
   "applicationId": "prompt.builder.deforum",
-  "version": "0.1",
+  "version": "0.2",
   "defaultMode": "window",
   "port": 0,
   "documentRoot": "/src/",
@@ -24,7 +24,7 @@
       "title": "Prompt Builder For Deforum",
       "width": 800,
       "height": 500,
-      "minWidth": 400,
+      "minWidth": 800,
       "minHeight": 200,
       "fullScreen": false,
       "alwaysOnTop": false,

@@ -3,7 +3,7 @@
 import {mainContentHandler} from "./viewsHandler.js";
 import {addKeyframeStart, addKeyframeEnd, addKeyframeBefore, addKeyframeAfter, 
     moveStart, moveEnd, moveBefore, moveAfter, duplicateKeyframe, deleteKeyframe, 
-    copyPromptToClipboard, savePromptToFile, resetFrame} from "./buttons.js";
+    copyPromptToClipboard, savePromptToFile, resetFrame, duplicateStart} from "./buttons.js";
 
 window.mainContentHandler = mainContentHandler;
 window.addKeyframeStart = addKeyframeStart;
@@ -19,6 +19,7 @@ window.deleteKeyframe = deleteKeyframe;
 window.copyPromptToClipboard = copyPromptToClipboard;
 window.savePromptToFile = savePromptToFile;
 window.resetFrame = resetFrame;
+window.duplicateStart = duplicateStart;
 
 const keyframesOnLoad = 2;
 
@@ -28,6 +29,7 @@ window.onload = () => {
 
 function addFramesOnStart() {
     for (let i = 0; i < keyframesOnLoad; i++) {
-        addKeyframeEnd();
+        addKeyframeEnd('prompt');
+        addKeyframeEnd('motion');
     }
 }
