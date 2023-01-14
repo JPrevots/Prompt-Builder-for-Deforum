@@ -1,0 +1,42 @@
+/* Fixes the page from shifting to the left when the scrollbar appears */
+body {
+    overflow: scroll;
+}
+
+/* Remove the arrows in number input fields (Chromium based browsers) */
+/* input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+} */
+
+/* Firefox */
+/* input[type=number] {
+    -moz-appearance: textfield;
+} */
+
+#promptView {
+    background-color: #4d4d4d;
+    border-radius: 10px;
+}
+
+.globalButton {
+    height: 58px;
+    /* background-color: #3b3b3b; */
+    border-radius: 10px;
+    /* text-decoration-color: rgb(105, 2, 91);*/
+} 
+
+.promptKeyframe {
+    background-color: #3b3b3b;
+    border-radius: 10px;
+}
+
+/* .promptKeyframe:hover {
+    background-color: rgb(54, 67, 81);
+}
+
+.promptKeyframe:active {
+    background-color: rgb(54, 67, 81);
+}
+ */

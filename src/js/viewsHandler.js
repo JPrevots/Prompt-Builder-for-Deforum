@@ -12,6 +12,7 @@ function hideAll() {
         views[i].classList.add("d-none"); // Hide
     }
 }
+
 // contentName is the id of what will be shown on the page
 function showCurrentContent(contentName) {
     let currentContent = document.getElementById(contentName);

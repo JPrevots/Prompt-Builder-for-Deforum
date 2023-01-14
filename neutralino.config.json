@@ -22,9 +22,9 @@
   "modes": {
     "window": {
       "title": "Prompt Builder For Deforum",
-      "width": 800,
+      "width": 900,
       "height": 500,
-      "minWidth": 800,
+      "minWidth": 900,
       "minHeight": 200,
       "fullScreen": false,
       "alwaysOnTop": false,
