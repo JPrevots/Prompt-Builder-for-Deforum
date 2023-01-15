@@ -22,9 +22,7 @@ input::-webkit-inner-spin-button {
 
 .globalButton {
     height: 58px;
-    /* background-color: #3b3b3b; */
     border-radius: 10px;
-    /* text-decoration-color: rgb(105, 2, 91);*/
 } 
 
 .promptKeyframe {
@@ -36,6 +34,7 @@ input::-webkit-inner-spin-button {
     background-color: rgb(54, 67, 81);
 }
 
+/* Hides the ghost element created when dragging */
 .sortable-drag {
     display: none;
 }

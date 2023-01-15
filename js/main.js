@@ -6,8 +6,8 @@ import {addKeyframeStart, addKeyframeEnd, addKeyframeBefore, addKeyframeAfter,
     moveStart, moveEnd, moveBefore, moveAfter, deleteKeyframe, 
     copyPromptToClipboard, savePromptToFile, resetFrame, reorderFrameNumber, 
     addMultipleFrames, saveConfig, eventNumber, duplicateStart, duplicateBefore, duplicateEnd } from "./buttons.js";
-
 import Sortable from './sortable.esm.js';
+
 // Makes the prompt draggable
 const sortableFrames = document.getElementById('promptContainer');
 new Sortable(sortableFrames, {
@@ -54,7 +54,7 @@ window.onload = () => {
     reorderFrameNumber();
 }
 
-// Not too sure about this one, might have to ask for feedback
+// Might have to fix, it changes the frame numbers when dragging items
 function updateState() {
     eventNumber();
     reorderFrameNumber();
@@ -71,10 +71,3 @@ function generateFramesAndReorder() {
     addMultipleFrames();
     reorderFrameNumber();
 }
-
-/* const globalButtons = document.getElementsByClassName('globalButton');
-function changeGlobalButtonColorOnClick() {
-    for (let i in globalButtons) {
-
-    }
-} */

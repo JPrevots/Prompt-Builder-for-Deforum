@@ -18,7 +18,7 @@ export function promptBuilder() {
 
             let negativePrompt = "";
             let positivePrompt = "";
-            
+
             // Prevents inserting "--neg" if there is no negative prompt
             if (globalNegativePrompt || specificNegativePrompt) {
                 if (globalNegativeFirst.checked == true) {
@@ -45,22 +45,26 @@ export function promptBuilder() {
             }
         }
 
-        // Building json
-        let prompt = "{\n";
-        for (let i = 0; i < promptCache.length; i++) {
-            // Prevents adding a , at the end of the last entry
-            if (i == (promptCache.length - 1)) {
-                prompt += `${promptCache[i]}`;
-                prompt += "\n";
-            } else {
-                prompt += `${promptCache[i]}`;
-                prompt += ",\n";
-            }
-        }
-        prompt += "}";
+        //console.log(promptCache);
 
-        //JSON.stringify(fullPromptJson);
-        return prompt
+        // Fix. If there is a globalPositivePrompt or globalNegativePrompt, it adds an entry for no reason, the fix removes it
+        let exportLength;
+        exportLength = (globalPositivePrompt || globalNegativePrompt) ? promptCache.length - 1 : promptCache.length;
+
+        // Building json
+        let prompt = '';
+        for (let i = 0; i < exportLength; i++) { // Prevents adding a , at the end of the last entry
+            prompt += (i == (exportLength - 1)) ? `${promptCache[i]}\n` : `${promptCache[i]},\n`;
+        }
+        return `{\n${prompt}}`;
+
+        // Old export wihout fix
+        // Building json
+/*         let prompt = '';
+        for (let i = 0; i < promptCache.length; i++) { // Prevents adding a , at the end of the last entry
+            prompt += (i == (promptCache.length - 1)) ? `${promptCache[i]}\n` : `${promptCache[i]},\n`;
+        }
+        return `{\n${prompt}}`; */
     }
 }
 
