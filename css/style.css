@@ -32,11 +32,10 @@ input::-webkit-inner-spin-button {
     border-radius: 10px;
 }
 
-/* .promptKeyframe:hover {
+.sortable-chosen {
     background-color: rgb(54, 67, 81);
 }
 
-.promptKeyframe:active {
-    background-color: rgb(54, 67, 81);
+.sortable-drag {
+    display: none;
 }
- */

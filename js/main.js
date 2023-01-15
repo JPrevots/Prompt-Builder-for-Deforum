@@ -12,8 +12,6 @@ import Sortable from './sortable.esm.js';
 const sortableFrames = document.getElementById('promptContainer');
 new Sortable(sortableFrames, {
     animation: 150,
-    //ghostClass: 'blue-background-class',
-    opacity: 1,
     forceFallback: true
 });
 
