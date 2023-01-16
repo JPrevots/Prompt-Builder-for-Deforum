@@ -10,31 +10,37 @@ export function promptBuilder() {
     let frameNumberCache = document.getElementsByClassName('frameNumber');
     let promptCache = [];
 
+    // Only export if there is at least one positive prompt
     if (positivePromptCache.length != 0) {
         for (let i = 0; i < positivePromptCache.length; i++) {
             let frameNumber = frameNumberCache[i].value;
+
+            // Remove trailing spaces
             let specificPositivePrompt = (positivePromptCache[i].value).trim();
             let specificNegativePrompt = (negativePromptCache[i].value).trim();
 
             let negativePrompt = "";
             let positivePrompt = "";
 
+            // Quick Fix. Check for empty string on specific prompts. Prevents exporting an empty prompt with only global prompts
+            if (!specificPositivePrompt && !specificNegativePrompt) {continue;}
+
             // Prevents inserting "--neg" if there is no negative prompt
             if (globalNegativePrompt || specificNegativePrompt) {
-                if (globalNegativeFirst.checked == true) {
+                if (globalNegativeFirst.checked) {
                     negativePrompt = `--neg ${globalNegativePrompt} ${specificNegativePrompt}`;
                 } else {
                     negativePrompt = `--neg ${specificNegativePrompt} ${globalNegativePrompt}`;
                 }
             }
 
-            if (globalPositiveFirst.checked == true) {
+            if (globalPositiveFirst.checked) {
                 positivePrompt = `${globalPositivePrompt} ${specificPositivePrompt}`;
             } else {
                 positivePrompt = `${specificPositivePrompt} ${globalPositivePrompt}`;
             }
 
-            // Cleaning up trailing spaces
+            // Remove trailing spaces
             let promptEntry = (`${positivePrompt} ${negativePrompt}`).trim();
             promptEntry = promptEntry.replace(/  +/g, ' '); // Replaces two spaces with only one
 
@@ -45,35 +51,11 @@ export function promptBuilder() {
             }
         }
 
-        //console.log(promptCache);
-
-        // Fix. If there is a globalPositivePrompt or globalNegativePrompt, it adds an entry for no reason, the fix removes it
-        let exportLength;
-        exportLength = (globalPositivePrompt || globalNegativePrompt) ? promptCache.length - 1 : promptCache.length;
-
         // Building json
         let prompt = '';
-        for (let i = 0; i < exportLength; i++) { // Prevents adding a , at the end of the last entry
-            prompt += (i == (exportLength - 1)) ? `${promptCache[i]}\n` : `${promptCache[i]},\n`;
-        }
-        return `{\n${prompt}}`;
-
-        // Old export wihout fix
-        // Building json
-/*         let prompt = '';
         for (let i = 0; i < promptCache.length; i++) { // Prevents adding a , at the end of the last entry
             prompt += (i == (promptCache.length - 1)) ? `${promptCache[i]}\n` : `${promptCache[i]},\n`;
         }
-        return `{\n${prompt}}`; */
+        return `{\n${prompt}}`;
     }
-}
-
-// Removes unwanted symbols that would throw an error in webUI
-// Replaces . with ,
-// = ' " , ; ²
-function sanityCheck(string) {
-    string = string.replace(/.+/g, ','); // Replaces . with ,
-    string = string.replace(/  +/g, ' '); // Replaces two spaces with only one
-    string = string.replace(/[]+/g, '');
-    string = JSON.parse
 }

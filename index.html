@@ -10,10 +10,9 @@
 
     <link rel="stylesheet" href="./css/bootstrap-unlit.css">
 
-    <link rel="stylesheet" href="./css/style.css">
-
     <link rel="stylesheet" href="./css/bootstrap-icons/bootstrap-icons.css">
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"> -->
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
@@ -158,7 +157,7 @@
     </div>
 
     <!-- Prompt View -->
-    <div class="view container-fluid pb-3" id="promptView" style="max-width: 900px;" onclick="updateState()">
+    <div class="view container-fluid pb-3" id="promptView" style="max-width: 900px;" onclick="">
         <!-- Prompt File Name Row -->
         <div class="pt-3 row">
             <div class="col">
@@ -170,7 +169,12 @@
         </div>
         <!-- Frame Number Pattern Generator  -->
         <div class="pt-3 row">
-            <div class="col">
+            <div class="col-1 d-grid">
+                <input type="checkbox" class="btn-check" id="autoPattern" autocomplete="off" onclick="changeButtonColorOnChecked(event)" checked>
+                <label class="btn btn-danger my-auto" id="autoPatternLabel" for="autoPattern">Auto</label>
+                <!-- <button class="btn btn-danger" id="autoPattern" onclick="changeButtonColorOnChecked(event)" checked>Auto</button> -->
+            </div>
+            <div class="col-3">
                 <div class="form-floating">
                     <input type="number" min="0" step="1" class="form-control" value="30" id="frameNumberPattern">
                     <label>Frame number pattern</label>
@@ -189,6 +193,7 @@
                 <button class="btn btn-success" onclick="generateFramesAndReorder()">Apply number of frames</button>
             </div>
         </div>
+
         <!-- Static buttons row -->
         <div class="pt-3 row">
             <!-- Add blank keyframe -->
@@ -198,6 +203,9 @@
             <!-- Copy prompt to clipboard -->
             <div class="col d-grid">
                 <button class="btn btn-primary btn bi-clipboard2-check" id="copyPrompt" onclick="copyPromptToClipboard()"> Copy prompt to clipboard</button>
+            </div>
+            <div class="col d-grid seedFlag d-none">
+                <button class="btn btn-primary btn bi-clipboard2-check" id="copyPrompt" onclick="seedExport()"> Copy seed_schedule to clipboard</button>
             </div>
             <!-- Save prompt to file-->
             <div class="col d-grid">
@@ -214,8 +222,9 @@
                 </div>
             </div>
             <div class="col">
-                <input type="checkbox" class="btn-check globalButton" id="globalPositiveFirstButton" autocomplete="off">
-                <label class="btn btn-primary globalButton" for="globalPositiveFirstButton">Add before positive prompt</label><br>
+                <input type="checkbox" class="btn-check globalButton" id="globalPositiveFirstButton" autocomplete="off" onclick="changeButtonColorOnChecked(event)">
+                <label class="btn btn-secondary globalButton" id="globalPositiveFirstButtonLabel" for="globalPositiveFirstButton">Add before positive prompt</label>
+                <!-- <button class="btn btn-secondary" id="globalPositiveFirstButton" onclick="changeButtonColorOnChecked(event)">Add before positive prompt</button> -->
             </div>
         </div>
 
@@ -228,13 +237,14 @@
                 </div>
             </div>
             <div class="col">
-                <input type="checkbox" class="btn-check" id="globalNegativeFirstButton" autocomplete="off" value="True">
-                <label class="btn btn-primary globalButton" for="globalNegativeFirstButton">Add before negative prompt</label><br>
+                <input type="checkbox" class="btn-check" id="globalNegativeFirstButton" autocomplete="off" value="True" onclick="changeButtonColorOnChecked(event)">
+                <label class="btn btn-secondary globalButton" id="globalNegativeFirstButtonLabel" for="globalNegativeFirstButton">Add before negative prompt</label>
+                <!-- <button class="btn btn-secondary" id="globalNegativeFirstButton" onclick="changeButtonColorOnChecked(event)">Add before negative prompt</button> -->
             </div>
         </div>
 
         <!-- Where all the keyframe are -->
-        <div id="promptContainer" onchange="updateState()"></div>
+        <div id="promptContainer"></div>
     </div>
 
     <!-- Keyframe Template -->
@@ -245,7 +255,7 @@
             <div class="col-2">
                 <div class="input-group-text eventNumber text-end">1</div>
             </div>
-            <div class="col">
+            <div class="col-8">
                 <div class="btn-group">
                     <!-- Add New -->
                     <div class="input-group-text">New</div>
@@ -288,15 +298,23 @@
                     <button class="btn btn-danger btn-sm bi-x-circle" onclick="deleteKeyframe(event, 'prompt')"></button>
                 </div>
             </div>
-
         </div>
         <!-- Second Row -->
         <div class="my-2 row px-2 secondrow">
             <!-- frameNumber -->
+            <div class="col-1">
+                <button class="btn-secondary lock bi-unlock-fill" style="height: 58px; width:58px;" onclick="changeLockIcon(event)"></button>
+            </div>
             <div class="col-2">
                 <div class="form-floating">
                     <input type="number" class="form-control frameNumber" id="frameNumberField" min="0" value="0" placeholder="">
-                    <label>Key frame #</label>
+                    <label>Keyframe</label>
+                </div>
+            </div>
+            <div class="col-2 seedFlag d-none">
+                <div class="form-floating">
+                    <input type="number" class="form-control seed" min="0" value="0" placeholder="">
+                    <label>Seed</label>
                 </div>
             </div>
             <!-- Negative Prompt -->
@@ -454,7 +472,7 @@
             <!-- Start Frame Number -->
             <div class="col-2">
                 <div class="form-floating">
-                    <input type="number" class="form-control frameNumber" min="0" value="0" placeholder="">
+                    <input type="number" class="form-control span" min="0" value="0" placeholder="">
                     <label>Start</label>
                 </div>
             </div>

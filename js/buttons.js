@@ -1,6 +1,7 @@
 // Buttons
 import { promptBuilder } from "./prompt.js"
 
+// Used to generate unique id for frames
 let frameCounter = 0;
 
 export function resetFrame(event, keyframeType) {
@@ -10,7 +11,7 @@ export function resetFrame(event, keyframeType) {
 }
 
 let frames = document.getElementsByClassName('promptKeyframe');
-let framesContainter = document.getElementById('promptContainer');
+let framesContainer = document.getElementById('promptContainer');
 export function addMultipleFrames() {
     let totalFrameNumber = Number(document.getElementById('totalFrameNumber').value);
 
@@ -22,7 +23,7 @@ export function addMultipleFrames() {
     } else if (totalFrameNumber < frames.length) {
         // Removes frames if there are too many
         while (frames.length != totalFrameNumber) {
-            framesContainter.lastChild.remove();
+            framesContainer.lastChild.remove();
         }
     }
 }
@@ -33,17 +34,16 @@ function countingFrames() {
     totalFrameNumber.value = frames.length;
 }
 
+let lockedFrameNumber = document.getElementsByClassName('lock');
+let frameNumbers = document.getElementsByClassName('frameNumber');
 export function reorderFrameNumber() {
-    //let frames = document.getElementsByClassName('promptKeyframe');
-    let pattern = Number(document.getElementById('frameNumberPattern').value);
-
+    let pattern = Number(document.getElementById('frameNumberPattern').value); // Frame Number Pattern
     // Change the frameNumber.value for each frame
-    for (let i = 0; i < frames.length; i++ ) {
-        let frameNumber = frames[i].children[1];
-        for (let j = 0; j < 3; j++) { // Go down 3 levels to find the frameNumber div
-            frameNumber = frameNumber.firstElementChild;
+    for (let i = 0; i < frames.length; i++) {
+        let checked = lockedFrameNumber[i].classList.contains('bi-lock-fill');
+        if (!checked) {  // if the lock isn't checked, then apply the pattern to that frameNumber value
+            frameNumbers[i].value = pattern * i;
         }
-        frameNumber.value = pattern * i;
     }
 }
 
@@ -67,6 +67,7 @@ export function addKeyframeStart(keyframeType) {
         container.insertAdjacentElement("afterbegin", newFrame);
     }
     countingFrames();
+    eventNumber();
 }
 
 export function addKeyframeEnd(keyframeType) {
@@ -76,6 +77,7 @@ export function addKeyframeEnd(keyframeType) {
         container.insertAdjacentElement("beforeend", newFrame);
     }
     countingFrames();
+    eventNumber();
 }
 
 export function addKeyframeBefore(event, keyframeType) {
@@ -85,6 +87,7 @@ export function addKeyframeBefore(event, keyframeType) {
         el.insertAdjacentElement("beforebegin", newFrame);
     }
     countingFrames();
+    eventNumber();
 }
 
 export function addKeyframeAfter(event, keyframeType) {
@@ -94,6 +97,7 @@ export function addKeyframeAfter(event, keyframeType) {
         el.insertAdjacentElement("afterend", newFrame);
     }
     countingFrames();
+    eventNumber();
 }
 
 export function moveStart(event, keyframeType) {
@@ -145,7 +149,6 @@ export function duplicateEnd(event, keyframeType) {
     let newFrame = el.cloneNode(true);
     newFrame.id = `${keyframeType}${frameCounter}`;
     frameCounter++;
-    //container.append(newFrame);
     container.insertAdjacentElement("beforeend", newFrame);
 
     countingFrames();
@@ -225,10 +228,11 @@ class fileSave {
 }
 
 class promptFrames {
-    constructor(frameNumber, specificNegativePrompt, specificPositivePrompt) {
+    constructor(frameNumber, specificNegativePrompt, specificPositivePrompt, seedSchedule) {
         this.frameNumber = frameNumber;
         this.specificNegativePrompt = specificNegativePrompt;
         this.specificPositivePrompt = specificPositivePrompt;
+        this.seedSchedule = seedSchedule
     }
 }
 
@@ -236,20 +240,22 @@ export function saveConfig() {
     let positivePromptCache = document.getElementsByClassName('positivePrompt');
     let negativePromptCache = document.getElementsByClassName('negativePrompt');
     let frameNumberCache = document.getElementsByClassName('frameNumber');
+    let seedCache = document.getElementsByClassName('seed');
+
     let prompts = [];
 
     let content = new fileSave();
 
+    // Populates the content.prompts entries
     for (let i = 0; i < positivePromptCache.length - 1; i++) {
         let frameNumber = frameNumberCache[i].value;
         let specificNegativePrompt = negativePromptCache[i].value;
         let specificPositivePrompt = positivePromptCache[i].value;
+        let seedSchedule = seedCache[i].value;
 
-        let prompt = new promptFrames(frameNumber, specificNegativePrompt, specificPositivePrompt);
-        //let prompt = [frameNumber, specificNegativePrompt, specificPositivePrompt];
+        let prompt = new promptFrames(frameNumber, specificNegativePrompt, specificPositivePrompt, seedSchedule);
         prompts.push(prompt);
     }
-
     content.prompts = prompts;
 
     // Sanity Check
@@ -260,6 +266,7 @@ export function saveConfig() {
 
     content = JSON.stringify(content);
 
+    // Download
     let output = "data:text/json;charset=utf-8," + encodeURIComponent(content);
     let downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", output);
@@ -271,11 +278,28 @@ export function saveConfig() {
 
 // Number on the top left of each frame
 export function eventNumber() {
-    for (let y = 0; y < frames.length; y++ ) {
-        let eventNumber = frames[y].children[0];
-        for (let j = 0; j < 2; j++) { // Go down 3 levels to find the eventNumber div
-            eventNumber = eventNumber.firstElementChild;
-        }
-        eventNumber.textContent = y + 1;
+    let eventNumbers = document.getElementsByClassName('eventNumber');
+    for (let i = 0; i < eventNumbers.length; i++) {
+        eventNumbers[i].textContent = i + 1;
     }
+}
+
+// Export seed_schedule parameters to clipboard
+export function seedExport() {
+    let frameNumberCache = document.getElementsByClassName('frameNumber');
+    let seedCache = document.getElementsByClassName('seed');
+    let output = '';
+    for (let i = 0; i < seedCache.length - 1; i++) {
+        let seedFrame = `${frameNumberCache[i].value}: (${seedCache[i].value})`;
+        if (seedCache[i].value != 0) { // Prevents exporting seed with a value of 0
+            output += `${seedFrame}, `;
+        }
+    }
+    navigator.clipboard.writeText(output);
+}
+
+const autoPattern = document.getElementById('autoPattern');
+export function updateState() {
+    eventNumber();
+    if (autoPattern.checked) { reorderFrameNumber(); }
 }

@@ -38,3 +38,7 @@ input::-webkit-inner-spin-button {
 .sortable-drag {
     display: none;
 }
+
+.lock {
+    border-radius: 10px;
+}
