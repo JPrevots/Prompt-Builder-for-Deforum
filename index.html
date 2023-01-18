@@ -17,7 +17,7 @@
 
 <body>
     <!-- NavBar -->
-    <nav class="pt-3 container-fluid" style="max-width: 900px;">
+    <nav class="pt-3 container-fluid" id="navBarContainer" style="max-width: 900px;">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <div class="navbar-brand pb-3">Prompt Builder for Deforum webUI</div>
@@ -42,7 +42,7 @@
     </nav>
 
     <!-- Settings View -->
-    <div class="view container-fluid d-none" id="settingsView" style="max-width: 900px;">
+    <div class="view container-fluid d-none" id="settingsView">
         <!-- First Row -->
         <div class="my-2 row px-2">
             <!-- Project Name -->
@@ -157,7 +157,7 @@
     </div>
 
     <!-- Prompt View -->
-    <div class="view container-fluid pb-3" id="promptView" style="max-width: 900px;" onclick="">
+    <div class="view container-fluid pb-3" id="promptView">
         <!-- Prompt File Name Row -->
         <div class="pt-3 row">
             <div class="col">
@@ -166,12 +166,21 @@
                     <label for="promptName">File Name</label>
                 </div>
             </div>
+            <!-- Load config from file -->
+            <div class="col d-grid">
+                <!-- <input class="btn btn-primary btn bi-download" type="file" id="fileInput"> -->
+                <input class="form-control" type="file" id="fileInput" accept=".json">
+            </div>
+            <!-- Save config to file-->
+            <div class="col d-grid">
+                <button class="btn btn-primary btn bi-download" id="saveFile" onclick="saveConfig()"> Save Config</button>
+            </div>
         </div>
         <!-- Frame Number Pattern Generator  -->
         <div class="pt-3 row">
-            <div class="col-1 d-grid">
+            <div class="col-2 d-grid">
                 <input type="checkbox" class="btn-check" id="autoPattern" autocomplete="off" onclick="changeButtonColorOnChecked(event)" checked>
-                <label class="btn btn-danger my-auto" id="autoPatternLabel" for="autoPattern">Auto</label>
+                <label class="btn btn-danger my-auto" id="autoPatternLabel" for="autoPattern">Auto apply pattern</label>
                 <!-- <button class="btn btn-danger" id="autoPattern" onclick="changeButtonColorOnChecked(event)" checked>Auto</button> -->
             </div>
             <div class="col-3">
@@ -338,7 +347,7 @@
     </div>
 
     <!-- Motion View -->
-    <div class="view container-fluid d-none" id="motionView" style="max-width: 900px;">
+    <div class="view container-fluid d-none" id="motionView">
         <!-- Static Global Positive Prompt Row -->
         <div class="pt-3 row">
             <div class="col">

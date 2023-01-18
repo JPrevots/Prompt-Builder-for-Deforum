@@ -2,6 +2,7 @@
 // https://github.com/JPrevots/Prompt-Builder-for-Deforum
 
 import {mainContentHandler} from "./viewsHandler.js";
+import { promptBuilder } from "./prompt.js"
 import {addKeyframeStart, addKeyframeEnd, addKeyframeBefore, addKeyframeAfter, 
     moveStart, moveEnd, moveBefore, moveAfter, deleteKeyframe, 
     copyPromptToClipboard, savePromptToFile, resetFrame, reorderFrameNumber, 
@@ -56,7 +57,7 @@ new Sortable(sortableFrames, {
     handle: ".firstrow",
     // Element dragging started
 	onChange: function () {
-        updateState();
+        if (document.getElementById('autoPattern').checked) { reorderFrameNumber(); }
 	}
 });
 
@@ -75,7 +76,7 @@ function textAreaAutoExpand(element) {
 const keyframesOnLoad = 4;
 
 // Hide the seed schedule feature
-const seedFlag = false;
+export const seedFlag = false;
 function checkSeedFlag() {
     if (seedFlag) {
         let element = document.getElementsByClassName('seedFlag');
@@ -92,6 +93,7 @@ function addFramesOnStart() {
     }
 }
 
+// Should be separated
 function generateFramesAndReorder() {
     addMultipleFrames();
     reorderFrameNumber();
@@ -107,6 +109,12 @@ function changeButtonColorOnChecked(event) {
     let label = document.getElementById(`${id}Label`); // The id of the label should be named like this
     (input.checked) ? label.classList.replace('btn-secondary', 'btn-danger') : label.classList.replace('btn-danger', 'btn-secondary');
 }
+
+
+// To fix the eventNumber not refreshing when auto is disabled
+document.getElementById('promptContainer').addEventListener('change', function () {
+    eventNumber();
+});
 
 function changeLockIcon(event) {
     let element = event.target;

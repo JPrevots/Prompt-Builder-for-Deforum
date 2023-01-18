@@ -22,7 +22,6 @@ input::-webkit-inner-spin-button {
 
 .globalButton {
     height: 58px;
-    border-radius: 10px;
 } 
 
 .promptKeyframe {
@@ -39,6 +38,23 @@ input::-webkit-inner-spin-button {
     display: none;
 }
 
+/* Lock label */
 .lock {
     border-radius: 10px;
+}
+
+.btn {
+    border-radius: 10px;
+}
+
+#fileInput {
+    height: 58px;
+}
+
+.view {
+    max-width: 1000px;
+}
+
+#navBarContainer {
+    max-width: 1000px;
 }
